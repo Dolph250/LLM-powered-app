@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flood Map - Sylhet</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+    .legend { background: white; padding: 10px; font-size: 14px; }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const map = L.map('map').setView([24.9, 91.8], 9);
+
+  // Base layer
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  // Dynamically generated Earth Engine tile URLs from backend view
+  fetch('/get_all_flood_layers/')
+    .then(response => response.json())
+    .then(layers => {
+      const layerControl = {};
+
+      for (const [name, url] of Object.entries(layers)) {
+        const tile = L.tileLayer(url);
+        layerControl[name] = tile;
+      }
+
+      // Add default layer (e.g. 2024 flood)
+      if (layerControl["Flood Inundation 2024"]) {
+        layerControl["Flood Inundation 2024"].addTo(map);
+      }
+
+      L.control.layers(null, layerControl).addTo(map);
+    });
+
+  // Legend
+  const legend = L.control({position: 'bottomright'});
+  legend.onAdd = function (map) {
+    const div = L.DomUtil.create('div', 'legend');
+    div.innerHTML = `
+      <strong>Legend</strong><br>
+      <span style="background:yellow;width:20px;height:10px;display:inline-block"></span> Flood Inundation<br>
+      <span style="background:red;width:20px;height:10px;display:inline-block"></span> Flood Hazard Zone<br>
+    `;
+    return div;
+  };
+  legend.addTo(map);
+</script>
+</body>
+</html>

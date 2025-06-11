@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900&display=swap');
+
+:root
+{
+
+  --color1:#17a43b; /* Green */
+  --color2:#F59B29; /* yellow */
+  /*--color2:#ff9600;*/ /* yellow */
+
+  --gray1:#f1f1f1;
+
+  /*
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+  */
+}
+
+#rightSideAreaNews
+{
+  min-height: 440px;
+  max-height: 440px;
+  overflow: hidden;
+}
+
+.rightSideAreaNews
+{
+  margin-top: 5px;
+}
+
+.rightSideAreaNews .block
+{
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.rightSideAreaNews .block .leftArea
+{
+  float: left;
+  margin-right: 10px;
+}
+.rightSideAreaNews .block .leftArea .dateTime
+{
+  background-color: var(--color2);
+  width: 80px;
+  padding: 0px 0;
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+}
+
+.rightSideAreaNews .block .leftArea .dateTime .date
+{
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 40px;
+  color: var(--white);
+  display: block;
+  text-align: center;
+  margin-bottom: 7px;
+  line-height: 30px;
+  padding:7px 0;
+}
+.rightSideAreaNews .block .leftArea .dateTime .month-year
+{
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--white);
+  display: block;
+  text-align: center;
+  background-color: var(--color1); 
+  padding: 5px 0;
+}
+.RightDetailArea
+{
+
+  padding-top: 15px;
+  margin-left: 15px
+}

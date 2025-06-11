@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flood Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+    .legend { background: white; padding: 10px; font-size: 14px; }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const map = L.map('map').setView([24.9, 91.8], 8);
+
+  // Base layer (optional)
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  // Earth Engine Tile URLs (replace with dynamic Django context or manually copy)
+  const layers = {
+    "Flood May 2022": "https://earthengine.googleapis.com/v1/projects/myfirstfirebaseapp250/maps/904f26a7d785183a966be1616b640d0f-4a51966cb2e40d2acf06419037e66371/tiles/{z}/{x}/{y}",
+    "Flood June 2022": "https://earthengine.googleapis.com/v1/projects/myfirstfirebaseapp250/maps/b500fbdf78267d777608a060b959aea6-ec7e950c5e17ac48c2c5786bffeba1c4/tiles/{z}/{x}/{y}",
+    "Permanent Water": "https://earthengine.googleapis.com/v1/projects/myfirstfirebaseapp250/maps/c3822816d427a3477af0534257052945-457404a12a7134c1ccdea9f8b16a35b6/tiles/{z}/{x}/{y}",
+    "Vegetation RGB": "https://earthengine.googleapis.com/v1/projects/myfirstfirebaseapp250/maps/17e9f19126b25c25a2d416383748e7ac-cf2913bd25681d6e6c8cbfa34dad2603/tiles/{z}/{x}/{y}",
+    "Soil Moisture": "https://earthengine.googleapis.com/v1/projects/myfirstfirebaseapp250/maps/cad1914016143a9b1705157dc3ffedfe-9cb971e8672cf222fd0fa9d5380ec402/tiles/{z}/{x}/{y}"
+  };
+
+  const layerControl = {};
+  for (const [name, url] of Object.entries(layers)) {
+    layerControl[name] = L.tileLayer(url);
+  }
+
+  // Add default layer
+  layerControl["Flood May 2022"].addTo(map);
+
+  // Layer control
+  L.control.layers(null, layerControl).addTo(map);
+
+  // Legend (you can make it dynamic if needed)
+  const legend = L.control({position: 'bottomright'});
+  legend.onAdd = function (map) {
+    const div = L.DomUtil.create('div', 'legend');
+    div.innerHTML = `
+      <strong>Legend</strong><br>
+      <span style="background:blue;width:20px;height:10px;display:inline-block"></span> Water/Flood<br>
+      <span style="background:green;width:20px;height:10px;display:inline-block"></span> Vegetation<br>
+    `;
+    return div;
+  };
+  legend.addTo(map);
+</script>
+</body>
+</html>

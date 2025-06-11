@@ -1,0 +1,30 @@
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th><span class="mdi mdi-account-check"></span></th>
+            <th>Phone N<sup>o</sup></th>
+            <th>First name</th>
+            <th>Last name</th>
+         
+          <th>Options</th>
+          
+                 
+    </div>
+          
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for member in members %}
+        <tr><td><input type="checkbox" name="{{member.regnumber}}"></td>
+            <td>{{member.regnumber}}</td>
+            <td>{{member.firstname}}</td>
+            <td>{{member.lastname}}</td>
+            <td><button class="btn btn-danger" onClick="deleteSingle('{{member.id}}')"><span class="mdi mdi-delete-forever"></span></button> <button class="btn btn-primary" id="edit" data-id="{{member.id}}" data-firstname="{{member.firstname}}" data-lastname="{{ member.lastname }}" 
+                data-regnumber="{{ member.regnumber }}"><span class="mdi mdi-table-edit"></span> Edit</button> </td>
+             {% endfor %}
+          </tbody> 
+
+</table>  
+
+

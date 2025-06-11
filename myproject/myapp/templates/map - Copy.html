@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flood Map Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        #map {
+            height: 90vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+ {% if user.is_authenticated %}
+<!-- dashboard content -->
+
+
+
+    <h2 style="text-align:center;">Sylhet Flood Inundation Map</h2>
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([24.9, 91.8], 10);  // Adjust center/zoom if needed
+
+        // Add base OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19,
+        }).addTo(map);
+
+        // Fetch GEE flood tiles and add as overlay
+        fetch('/get-flood-tiles/')
+            .then(response => response.json())
+            .then(data => {
+                const tileUrl = data.tile_url;
+
+                const floodLayer = L.tileLayer(tileUrl, {
+                    attribution: '&copy; <a href="https://earthengine.google.com/">Google Earth Engine</a>',
+                    maxZoom: 18,
+                    tileSize: 256,
+                    opacity: 0.6 // semi-transparent
+                });
+
+                floodLayer.addTo(map);
+            })
+            .catch(error => {
+                console.error('Failed to load GEE flood layer:', error);
+            });
+    </script>
+{% else %}
+<p>Please <a href="{% url 'login' %}">log in</a> to view this page.</p>
+{% endif %}
+</body>
+</html>

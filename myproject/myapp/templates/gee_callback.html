@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redirecting...</title>
+  <script>
+    window.onload = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id_token = urlParams.get('credential');
+      if (id_token) {
+        localStorage.setItem('gee_id_token', id_token);
+        window.location.href = '/maps/';  // Go back to your main map page
+      } else {
+        document.body.innerHTML = 'Error: ID token missing.';
+      }
+    };
+  </script>
+</head>
+<body>
+  <p>Redirecting back to map...</p>
+</body>
+</html>

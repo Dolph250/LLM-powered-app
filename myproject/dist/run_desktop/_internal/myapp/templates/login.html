@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <!-- Load the Google Identity Services library -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    body {
+      background: #f1f5f9;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .card h2 {
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    #g_id_signin {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Login with Google</h2>
+    <div id="g_id_signin"></div>
+  </div>
+
+  <script>
+    window.onload = function () {
+      if (typeof google === "undefined") {
+        console.error("Google Sign-In script not loaded");
+        return;
+      }
+
+      google.accounts.id.initialize({
+        client_id: "415219860716-o9to0otqdg0g1d4du1rm5oq2vmi0oncr.apps.googleusercontent.com",
+        callback: handleCredentialResponse,
+        ux_mode: "redirect",
+        login_uri: "http://localhost:8000/google-auth/"
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById("g_id_signin"),
+        { theme: "outline", size: "large", width: "100%" }
+      );
+    };
+
+    function handleCredentialResponse(response) {
+      console.log("Credential received:", response);
+
+      fetch("/google-auth/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({
+          credential: response.credential,
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          window.location.href = "/";
+        } else {
+          alert("Login failed.");
+        }
+      })
+      .catch(error => {
+        console.error("Error during authentication:", error);
+      });
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  </script>
+</body>
+</html>
